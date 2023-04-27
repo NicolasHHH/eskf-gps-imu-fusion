@@ -28,7 +28,7 @@ set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 set (LIBNAME Geographic)
 
 include_directories(
-  ./include/
+        include
 )
 
 add_library(libGeographiccc src/LocalCartesian.cpp

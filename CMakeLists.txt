@@ -10,7 +10,7 @@ include(cmake/eigen.cmake)
 include(cmake/YAML.cmake)
 include(cmake/global_defination.cmake)
 
-include_directories(${PROJECT_SOURCE_DIR}/3rd/GeographicLib/include/)
+# include_directories(3rd-party/GeographicLib/include)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 add_library(DEPS SHARED
@@ -19,9 +19,9 @@ add_library(DEPS SHARED
     src/imu_flow.cpp
     src/eskf_flow.cpp
     src/observability_analysis.cpp
-    3rd/GeographicLib/src/LocalCartesian.cpp
-    3rd/GeographicLib/src/Geocentric.cpp
-    3rd/GeographicLib/src/Math.cpp
+        3rd-party/GeographicLib/src/LocalCartesian.cpp
+        3rd-party/GeographicLib/src/Geocentric.cpp
+        3rd-party/GeographicLib/src/Math.cpp
 )
 
 target_link_libraries(DEPS

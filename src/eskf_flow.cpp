@@ -117,6 +117,7 @@ bool ESKFFlow::Run() {
         observability_analysis.ComputeSOM();
         observability_analysis.ComputeObservability();
     }
+    return true;
 }
 
 bool ESKFFlow::TestRun() {
@@ -147,6 +148,7 @@ bool ESKFFlow::TestRun() {
             imu_data_buff_.pop_front();
             SavePose(fused_file, eskf_ptr_->GetPose());
     }
+    return true;
 }
 
 void ESKFFlow::SavePose(std::ofstream &ofs, const Eigen::Matrix4d &pose) {

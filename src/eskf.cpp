@@ -2,7 +2,7 @@
 // Created by meng on 2021/2/19.
 //
 #include "eskf.h"
-#include "../3rd/sophus/se3.hpp"
+#include "../3rd-party/sophus/se3.hpp"
 
 constexpr double kDegree2Radian = M_PI / 180.0;
 
@@ -120,6 +120,7 @@ bool ESKF::Predict(const IMUData &curr_imu_data) {
     UpdateErrorState(delta_t, curr_accel);
 
     imu_data_buff_.pop_front();
+    return true;
 }
 
 bool ESKF::UpdateErrorState(double t, const Eigen::Vector3d &accel) {
@@ -202,6 +203,7 @@ bool ESKF::ComputeEarthTranform(Eigen::Matrix3d &R_nm_nm_1) {
     Eigen::AngleAxisd angle_axisd(angular.norm(), angular.normalized());
 
     R_nm_nm_1 = angle_axisd.toRotationMatrix().transpose();
+    return true;
 }
 
 bool ESKF::ComputeOrientation(const Eigen::Vector3d &angular_delta,

@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include "Geocentric/LocalCartesian.hpp"
+#include "../Geocentric/LocalCartesian.hpp"
 
 namespace GeographicLib {
 

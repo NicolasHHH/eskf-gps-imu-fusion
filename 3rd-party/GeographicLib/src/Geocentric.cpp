@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include "Geocentric/Geocentric.hpp"
+#include "../Geocentric/Geocentric.hpp"
 
 namespace GeographicLib {
 
