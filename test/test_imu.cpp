@@ -1,6 +1,7 @@
 //
 // Created by meng on 2021/2/23.
 //
+// test reading imu data
 
 #include <iostream>
 
@@ -12,9 +13,9 @@ int main(){
 
     std::vector<IMUData> imu_data_buff;
 
-    IMUFlow imu_flow;
+    // IMUFlow imu_flow;
 
-    imu_flow.ReadIMUData(data_path, imu_data_buff);
+    IMUFlow::ReadIMUData(data_path, imu_data_buff);
 
     for (int i = 0; i < imu_data_buff.size(); ++i) {
         std::cout << "\nindex: " << i << std::endl;

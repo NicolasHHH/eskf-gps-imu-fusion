@@ -74,6 +74,10 @@ namespace GeographicLib {
      *
      * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.
      **********************************************************************/
+     // explicit : prevent unintended implicit conversion
+     // only used when the constructor has only one parameter (single argument) in most cases
+     // in this specific case, the usage of explicit forbids functions that take LocalCartesian as input parameter
+     // to accept Geocentric as input parameter
     explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84())
       : _earth(earth)
     { Reset(real(0), real(0), real(0)); }

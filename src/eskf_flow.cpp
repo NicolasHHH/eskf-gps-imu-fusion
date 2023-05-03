@@ -1,5 +1,6 @@
 //
 // Created by meng on 2021/2/24.
+// Corrected by hty on 2023/5/3
 //
 #include "eskf_flow.h"
 #include "tool.h"
@@ -81,6 +82,7 @@ bool ESKFFlow::Run() {
         }
     }
 
+    // output
     std::ofstream gt_file(work_space_path_+"/data/gt.txt", std::ios::trunc);
     std::ofstream fused_file(work_space_path_+"/data/fused.txt", std::ios::trunc);
     std::ofstream measured_file(work_space_path_+"/data/measured.txt", std::ios::trunc);
@@ -89,18 +91,21 @@ bool ESKFFlow::Run() {
         curr_imu_data_ = imu_data_buff_.front();
         curr_gps_data_ = gps_data_buff_.front();
         if (curr_imu_data_.time < curr_gps_data_.time){
+            std::cout << "dead-reckoning" << std::endl;
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
         } else{
+            std::cout << "incoming GPS" << std::endl;
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
 
+            std::cout << "Do Correction" << std::endl;
             eskf_ptr_->Correct(curr_gps_data_);
 
             SavePose(fused_file, eskf_ptr_->GetPose());
-            SavePose(measured_file,Vector2Matrix(curr_gps_data_.position_ned));
+            SavePose(measured_file,Vector2Matrix(curr_gps_data_.position));
 
-            SavePose(gt_file, Vector2Matrix(GPSFlow::LLA2NED(curr_gps_data_.true_position_lla)));
+            SavePose(gt_file, Vector2Matrix(GPSFlow::LLA2ENU(curr_gps_data_.true_position_lla)));
             gps_data_buff_.pop_front();
         }
 

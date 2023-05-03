@@ -1,5 +1,6 @@
 //
 // Created by meng on 2021/2/19.
+// Corrected by hty on 2023/5/3.
 //
 #include "tool.h"
 #include "imu_flow.h"
@@ -9,12 +10,14 @@
 bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_data_buff, const int skip_rows) {
     constexpr double D2R = 0.017453292519943295;
 
+    // set file path
     std::string accel_file_path = path + "/accel-0.csv";
     std::string ref_accel_file_path = path + "/ref_accel.csv";
     std::string gyro_file_path = path + "/gyro-0.csv";
     std::string ref_gyro_file_path = path + "/ref_gyro.csv";
     std::string time_file_path = path + "/time.csv";
 
+    // open file
     std::ifstream accel_file(accel_file_path);
     std::ifstream ref_accel_file(ref_accel_file_path);
     std::ifstream gyro_file(gyro_file_path);
@@ -38,6 +41,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
     std::string time_line;
     std::string temp;
 
+    // skip the first rows
     for (int i = 0; i < skip_rows; ++i) {
         std::getline(accel_file, temp);
         std::getline(ref_accel_file, temp);
@@ -46,6 +50,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
         std::getline(time_file, temp);
     }
 
+    // read data
     while ( std::getline(accel_file, accel_line) &&
             std::getline(ref_accel_file, ref_accel_line) &&
             std::getline(gyro_file, gyro_line) &&
@@ -64,7 +69,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
         std::getline(ss, temp, ',');
         imu_data.linear_accel.z() = std::stod(temp);
 
-        TransformCoordinate(imu_data.linear_accel);
+        // TransformCoordinate(imu_data.linear_accel); // transform NWD to ENU
 
         ss.clear();
         ss << ref_accel_line;
@@ -75,7 +80,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
         std::getline(ss, temp, ',');
         imu_data.true_linear_accel.z() = std::stod(temp);
 
-        TransformCoordinate(imu_data.true_angle_velocity);
+        // TransformCoordinate(imu_data.true_linear_accel);
 
         ss.clear();
         ss << gyro_line;
@@ -86,7 +91,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
         std::getline(ss, temp, ',');
         imu_data.angle_velocity.z() = std::stod(temp) * D2R;
 
-        TransformCoordinate(imu_data.angle_velocity);
+        // TransformCoordinate(imu_data.angle_velocity);
 
         ss.clear();
         ss << ref_gyro_line;
@@ -97,7 +102,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::vector<IMUData> &imu_dat
         std::getline(ss, temp, ',');
         imu_data.true_angle_velocity.z() = std::stod(temp) * D2R;
 
-        TransformCoordinate(imu_data.true_angle_velocity);
+        // TransformCoordinate(imu_data.true_angle_velocity);
 
         imu_data_buff.emplace_back(imu_data);
     }
@@ -163,7 +168,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::deque<IMUData> &imu_data
         std::getline(ss, temp, ',');
         imu_data.linear_accel.z() = std::stod(temp);
 
-        TransformCoordinate(imu_data.linear_accel);
+        // TransformCoordinate(imu_data.linear_accel);
 
         ss.clear();
         ss << ref_accel_line;
@@ -174,7 +179,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::deque<IMUData> &imu_data
         std::getline(ss, temp, ',');
         imu_data.true_linear_accel.z() = std::stod(temp);
 
-        TransformCoordinate(imu_data.true_linear_accel);
+        // TransformCoordinate(imu_data.true_linear_accel);
 
         ss.clear();
         ss << gyro_line;
@@ -185,7 +190,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::deque<IMUData> &imu_data
         std::getline(ss, temp, ',');
         imu_data.angle_velocity.z() = std::stod(temp) * D2R;
 
-        TransformCoordinate(imu_data.angle_velocity);
+        // TransformCoordinate(imu_data.angle_velocity);
 
         ss.clear();
         ss << ref_gyro_line;
@@ -196,7 +201,7 @@ bool IMUFlow::ReadIMUData(const std::string &path, std::deque<IMUData> &imu_data
         std::getline(ss, temp, ',');
         imu_data.true_angle_velocity.z() = std::stod(temp) * D2R;
 
-        TransformCoordinate(imu_data.true_angle_velocity);
+        // TransformCoordinate(imu_data.true_angle_velocity);
 
         imu_data_buff.emplace_back(imu_data);
     }

@@ -1,5 +1,6 @@
 //
 // Created by meng on 2021/2/19.
+// Corrected by Tianyang on 2023/5/3
 //
 #include "tool.h"
 #include "gps_flow.h"
@@ -9,21 +10,24 @@
 
 GeographicLib::LocalCartesian GPSFlow::geo_converter_{32.0, 120.0, 0.0};
 
-Eigen::Vector3d GPSFlow::LLA2NED(const Eigen::Vector3d &lla) {
-    Eigen::Vector3d ned;
-    geo_converter_.Forward(lla[0], lla[1], lla[2], ned[0], ned[1], ned[2]);
 
-    return ned;
+Eigen::Vector3d GPSFlow::LLA2ENU(const Eigen::Vector3d &lla) {
+    Eigen::Vector3d enu;
+    // lla -> ENU
+    geo_converter_.Forward(lla[0], lla[1], lla[2], enu[0], enu[1], enu[2]);
+    return enu;
 }
 
-void GPSFlow::LLA2NED(GPSData &gps_data) {
-    //lla -> ENU frame
+
+void GPSFlow::LLA2ENU(GPSData &gps_data) {
+    // lla -> ENU frame
+    // stores the result in gps_data.position
     geo_converter_.Forward(gps_data.position_lla.x(),
                            gps_data.position_lla.y(),
                            gps_data.position_lla.z(),
-                           gps_data.position_ned.x(),
-                           gps_data.position_ned.y(),
-                           gps_data.position_ned.z());
+                            gps_data.position.x(),
+                            gps_data.position.y(),
+                            gps_data.position.z());
 }
 
 bool GPSFlow::ReadGPSData(const std::string &path, std::vector<GPSData>& gps_data_vec,const int skip_rows) {
@@ -38,10 +42,14 @@ bool GPSFlow::ReadGPSData(const std::string &path, std::vector<GPSData>& gps_dat
         std::cerr << "failure to open gps file" << std::endl;
     }
 
-    GPSData gps_data;
-    gps_data_vec.clear();
+    GPSData gps_data; // lla+gt, pos, vel+gt, time,
+    gps_data_vec.clear(); // dynamically resizable array of GPSData
+    // .emplace_back( args for constructor ) //constructs a new object in place at the end of the vector.
+    // .push_back( existing obj ) // copy
+    // [] or .at() to access
+    // .size() to get size
 
-    std::string gps_data_line;
+    std::string gps_data_line; // store input string for parsing
     std::string ref_gps_data_line;
     std::string gps_time_line;
     std::string temp;
@@ -56,7 +64,7 @@ bool GPSFlow::ReadGPSData(const std::string &path, std::vector<GPSData>& gps_dat
            && std::getline(ref_gps_file, ref_gps_data_line)
            && std::getline(gps_time_file, gps_time_line))
     {
-        gps_data.time = std::stod(gps_time_line);
+        gps_data.time = std::stod(gps_time_line); // string to double
 
         std::stringstream ssr_0;
         std::stringstream ssr_1;
@@ -104,7 +112,7 @@ bool GPSFlow::ReadGPSData(const std::string &path, std::vector<GPSData>& gps_dat
 
         TransformCoordinate(gps_data.true_velocity);
 
-        LLA2NED(gps_data);
+        LLA2ENU(gps_data); // ENU frame
 
         gps_data_vec.emplace_back(gps_data);
     }
@@ -194,7 +202,7 @@ bool GPSFlow::ReadGPSData(const std::string &path, std::deque<GPSData>& gps_data
 
         TransformCoordinate(gps_data.true_velocity);
 
-        LLA2NED(gps_data);
+        LLA2ENU(gps_data); // ENU frame
 
         gps_data_vec.emplace_back(gps_data);
     }

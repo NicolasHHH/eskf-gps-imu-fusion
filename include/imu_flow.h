@@ -14,10 +14,12 @@ class IMUFlow{
 public:
     IMUFlow() = default;
 
+    // vector
     static bool ReadIMUData(const std::string& path,
                             std::vector<IMUData>& imu_data_buff,
                             const int skip_rows = 1);
 
+    // deque
     static bool ReadIMUData(const std::string& path,
                             std::deque<IMUData>& imu_data_buff,
                             const int skip_rows = 1);

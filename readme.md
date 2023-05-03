@@ -59,7 +59,13 @@ cd eskf-gps-imu-fusion/build
 
 ```shell
 cd eskf-gps-imu-fusion/data
-evo_traj kitti fused.txt gt.txt measured.txt -p
+
+# 查看轨迹
+evo_traj kitti fused.txt gt.txt measured.txt -p 
+
+# 查看误差
+evo_ape  kitti fused.txt  gt.txt  -va -p  --plot_mode=xy --save_results ../media/trajectory.zip
 ```
 
-> 需要安装evo，可以参考我的博客中的介绍：https://blog.csdn.net/u011341856/article/details/104594392?spm=1001.2014.3001.5501
+> 需要安装evo，git@github.com:MichaelGrupp/evo.git
+> 参考博客介绍：https://blog.csdn.net/u011341856/article/details/104594392?spm=1001.2014.3001.5501
