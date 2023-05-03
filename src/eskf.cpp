@@ -101,7 +101,7 @@ void ESKF::GetFGY(TypeMatrixF &F, TypeMatrixG &G, TypeVectorY &Y) {
 bool ESKF::Correct(const GPSData &curr_gps_data) {
     curr_gps_data_ = curr_gps_data;
 
-    Y_ = curr_gps_data.position - pose_.block<3,1>(0,3); // ? refer to the course
+    Y_ = curr_gps_data.position - pose_.block<3,1>(0,3); // ? ? refer to the course
 
     K_ = P_ * G_.transpose() * (G_ * P_ * G_.transpose() + C_ * R_ * C_.transpose()).inverse();
     // std::cout << "Kalman Gain: " << K_ << std::endl;
@@ -151,7 +151,7 @@ bool ESKF::UpdateErrorState(double t, const Eigen::Vector3d &accel) {
 
     Ft_ = F_ * t;
 
-    X_ = Fk * X_;
+    X_ = Fk * X_; // Bk * w ?  why not
     P_ = Fk * P_ * Fk.transpose() + Bk * Q_ * Bk.transpose();
     return true;
 }
@@ -190,12 +190,14 @@ bool ESKF::ComputeAngularDelta(Eigen::Vector3d &angular_delta) {
 
     Eigen::Vector3d curr_unbias_angular_vel = curr_angular_vel - gyro_bias_;
     Eigen::Vector3d last_unbias_angular_vel = last_angular_vel - gyro_bias_;
+    // gyro_bias supposed to be constant
 
     angular_delta = 0.5 * (curr_unbias_angular_vel + last_unbias_angular_vel) * delta_t;
 
     return true;
 }
 
+// ?
 bool ESKF::ComputeEarthTranform(Eigen::Matrix3d &R_nm_nm_1) {
     IMUData curr_imu_data = imu_data_buff_.at(1);
     IMUData last_imu_data = imu_data_buff_.at(0);
