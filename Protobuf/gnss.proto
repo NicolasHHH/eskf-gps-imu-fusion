@@ -1,0 +1,18 @@
+syntax = "proto3";
+package eskf_data_flow;
+
+message GpsProto {
+    message Vector3d {
+        double x = 1;
+        double y = 2;
+        double z = 3;
+    }
+
+    Vector3d position_lla = 1; // LLA
+    Vector3d velocity = 2; // ENU
+    Vector3d position = 3; // ENU
+
+    Vector3d true_velocity = 4;
+    Vector3d true_position_lla = 5;
+    double time = 6;
+}

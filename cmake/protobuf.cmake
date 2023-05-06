@@ -1,0 +1,4 @@
+find_package(Protobuf REQUIRED)
+
+link_directories(${PROTOBUF_INCLUDE_DIRS})
+list(APPEND ALL_TARGET_LIBRARIES ${PROTOBUF_LIBRARIES})

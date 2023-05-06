@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include "global_defination.h"
+#include "global_definition.h"
 #include "imu_flow.h"
 
 int main(){

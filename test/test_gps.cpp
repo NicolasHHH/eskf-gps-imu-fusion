@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "global_defination.h"
+#include "global_definition.h"
 #include "gps_flow.h"
 
 int main(){
